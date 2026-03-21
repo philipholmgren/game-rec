@@ -6,6 +6,7 @@ type SliderCardProps = {
   max: number;
   value: number;
   markers: [string, string, string];
+  onChange: (value: number) => void;
 };
 
 export default function SliderCard({
@@ -16,6 +17,7 @@ export default function SliderCard({
   max,
   value,
   markers,
+  onChange
 }: SliderCardProps) {
   return (
     <div className="bg-surface-container p-8 rounded-xl border border-outline-variant/10 shadow-lg">
@@ -29,7 +31,14 @@ export default function SliderCard({
         </span>
       </div>
 
-      <input className="w-full" max={max} min={min} type="range" value={value} readOnly />
+      <input 
+        className="w-full" 
+        max={max} 
+        min={min} 
+        type="range" 
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+       />
 
       <div className="flex justify-between mt-4 text-xs font-label text-on-surface-variant">
         <span>{markers[0]}</span>
