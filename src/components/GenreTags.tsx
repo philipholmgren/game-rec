@@ -1,6 +1,15 @@
-import { genres } from '../../data/mockdata';
+import type { GenreComponentProps } from "../types/componentPropTypes";
 
-export default function GenreTags() {
+export default function GenreTags(props: GenreComponentProps) {
+
+  const toggleGenre = (label: string) => {
+    props.setGenres((genres) =>
+      genres.map((genre) =>
+        genre.label === label ? { ...genre, selected: !genre.selected } : genre
+      )
+    );
+  };
+
   return (
     <section className="bg-surface-container p-8 rounded-xl border border-outline-variant/10">
       <div className="flex items-center gap-3 mb-8">
@@ -9,9 +18,9 @@ export default function GenreTags() {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        {genres.map((genre) => (
+        {props.genres.map((genre) => (
           <button
-            key={genre.id}
+            onClick={() => toggleGenre(genre.label)}
             className={
               genre.selected
                 ? 'px-6 py-2 rounded-lg bg-primary/20 text-primary border border-primary/30 font-medium transition-all'
