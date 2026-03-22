@@ -41,26 +41,29 @@ export default function RecommendationsModal({
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {recommendations.map((recommendation) => (
               <div className="flex gap-4">
-  {recommendation.headerImage && (
-    <img
-      src={recommendation.headerImage}
-      alt={`${recommendation.name} cover art`}
-      className="w-28 h-36 object-cover rounded-lg shrink-0"
-    />
-  )}
-
-  <div className="flex-1">
-    <h3 className="font-headline text-xl font-bold text-on-surface">
-      {recommendation.name}
-    </h3>
-    <p className="text-secondary-fixed font-semibold">
-  {recommendation.currentPrice ?? recommendation.price}
-</p>
-{recommendation.discountPercent && recommendation.discountPercent > 0 && (
-  <span className="inline-block mt-1 px-2 py-1 rounded-full bg-tertiary/15 text-tertiary text-xs font-semibold border border-tertiary/20">
-    -{recommendation.discountPercent}%
-  </span>
-)}
+              {recommendation.headerImage && (
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <img
+                    src={recommendation.headerImage}
+                    alt={recommendation.name}
+                    className="w-28 h-36 object-cover rounded-lg shrink-0"
+                  />
+                  </div>
+                </div>
+              )}
+              <div className="flex-1">
+                <h3 className="font-headline text-xl font-bold text-on-surface">
+                  {recommendation.name}
+                </h3>
+                <p className="text-secondary-fixed font-semibold">
+              {recommendation.currentPrice ?? recommendation.price}
+            </p>
+            {recommendation.discountPercent && recommendation.discountPercent > 0 && (
+              <span className="inline-block mt-1 px-2 py-1 rounded-full bg-tertiary/15 text-tertiary text-xs font-semibold border border-tertiary/20">
+                -{recommendation.discountPercent}%
+              </span>
+            )}
     <p className="text-sm text-on-surface-variant mt-2">
       {recommendation.reasoning}
     </p>
