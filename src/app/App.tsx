@@ -51,8 +51,8 @@ export default function App() {
         moods: selectedMoods,
         excludedGames
       };
-      console.log(request)
       const response = await getRecommendations(request);
+      console.log(response)
       setRecommendations(response);
       setIsModalOpen(true);
     } catch (error) {

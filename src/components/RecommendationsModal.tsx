@@ -40,40 +40,40 @@ export default function RecommendationsModal({
         <div className="p-6 max-h-[75vh] overflow-y-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {recommendations.map((recommendation) => (
-              <div
-                key={recommendation.link}
-                className="rounded-xl bg-surface-container border border-outline-variant/10 p-5 flex flex-col justify-between min-h-[220px]"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="font-headline text-xl font-bold text-on-surface leading-tight">
-                      {recommendation.name}
-                    </h3>
+              <div className="flex gap-4">
+  {recommendation.headerImage && (
+    <img
+      src={recommendation.headerImage}
+      alt={`${recommendation.name} cover art`}
+      className="w-28 h-36 object-cover rounded-lg shrink-0"
+    />
+  )}
 
-                    <span className="shrink-0 px-3 py-1 rounded-full bg-primary/15 text-primary text-xs font-semibold border border-primary/20">
-                      {recommendation.price}
-                    </span>
-                  </div>
-
-                  <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-4">
-                    {recommendation.reasoning}
-                  </p>
-                </div>
-
-                <div className="pt-4">
-                  <a
-                    href={recommendation.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary/10 text-secondary border border-secondary/20 hover:bg-secondary/15 transition-colors text-sm font-medium"
-                  >
-                    View Game
-                    <span className="material-symbols-outlined text-base">
-                      open_in_new
-                    </span>
-                  </a>
-                </div>
-              </div>
+  <div className="flex-1">
+    <h3 className="font-headline text-xl font-bold text-on-surface">
+      {recommendation.name}
+    </h3>
+    <p className="text-secondary-fixed font-semibold">
+  {recommendation.currentPrice ?? recommendation.price}
+</p>
+{recommendation.discountPercent && recommendation.discountPercent > 0 && (
+  <span className="inline-block mt-1 px-2 py-1 rounded-full bg-tertiary/15 text-tertiary text-xs font-semibold border border-tertiary/20">
+    -{recommendation.discountPercent}%
+  </span>
+)}
+    <p className="text-sm text-on-surface-variant mt-2">
+      {recommendation.reasoning}
+    </p>
+    <a
+      href={recommendation.link}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex mt-4 px-4 py-2 rounded-lg bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 transition-colors"
+    >
+      View on Steam
+    </a>
+  </div>
+</div>
             ))}
           </div>
         </div>
