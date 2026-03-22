@@ -26,7 +26,7 @@ export default function SliderCard({
           <span className="material-symbols-outlined text-primary">{icon}</span>
           {title}
         </h3>
-        <span className="text-secondary-fixed font-bold text-2xl font-headline">
+        <span className="text-secondary-fixed font-bold text-1xl font-headline">
           {valueLabel}
         </span>
       </div>
