@@ -1,4 +1,4 @@
-import type { Genre } from "./commonTypes";
+import type { Genre, Mood } from "./commonTypes";
 
 export type FiltersComponentProps = {
   genres: Genre[];
@@ -11,6 +11,12 @@ export type FiltersComponentProps = {
   setBudgetAmount: React.Dispatch<React.SetStateAction<number>>;
   wildcardAmount: number;
   setWildcardAmount: React.Dispatch<React.SetStateAction<number>>;
+  moods: Mood[];
+  setMoods: React.Dispatch<React.SetStateAction<Mood[]>>;
+  customMoods: string[];
+  setCustomMoods: React.Dispatch<React.SetStateAction<string[]>>;
+  excludeGames: string[];
+  setExcludeGames: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export type GenreComponentProps = {
@@ -18,6 +24,18 @@ export type GenreComponentProps = {
   setGenres: React.Dispatch<React.SetStateAction<Genre[]>>;
   customGenres: string[];
   setCustomGenres: React.Dispatch<React.SetStateAction<string[]>>;
+};
+
+export type MoodComponentProps = {
+  moods: Mood[];
+  setMoods: React.Dispatch<React.SetStateAction<Mood[]>>;
+  customMoods: string[];
+  setCustomMoods: React.Dispatch<React.SetStateAction<string[]>>;
+};
+
+export type ExcludeGamesProps = {
+  excludedGames: string[];
+  setExcludedGames: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export type GenerateRecommendationsProps = {
@@ -31,4 +49,11 @@ export type CustomGenresModalProps = {
   onClose: () => void;
   customGenres: string[];
   setCustomGenres: React.Dispatch<React.SetStateAction<string[]>>;
+};
+
+export type CustomMoodsModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  customMoods: string[];
+  setCustomMoods: React.Dispatch<React.SetStateAction<string[]>>;
 };

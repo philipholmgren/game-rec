@@ -3,6 +3,11 @@ export type Genre = {
   selected: boolean
 };
 
+export type Mood = {
+  label: string
+  selected: boolean
+};
+
 export type Recommendation = {
   name: string;
   price: string;
@@ -16,4 +21,6 @@ export type RecommendationRequest = {
   players: number;
   budget: number;
   wildcardAmount: number
+  moods: string[]
+  excludedGames: string[]
 };

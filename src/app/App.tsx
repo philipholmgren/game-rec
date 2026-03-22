@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { allGenres } from '../data/genres';
 import type { Recommendation, RecommendationRequest } from '../types/commonTypes';
 import { getRecommendations } from '../http/getRecommendations';
+import { allMoods } from '../data/moods';
 
 export default function App() {
   const [genres, setGenres] = useState(allGenres);
@@ -13,6 +14,9 @@ export default function App() {
   const [playerAmount, setPlayerAmount] = useState(2);
   const [budgetAmount, setBudgetAmount] = useState(20);
   const [wildcardAmount, setWildcardAmount] = useState(25);
+  const [moods, setMoods] = useState(allMoods);
+  const [customMoods, setCustomMoods] = useState<string[]>([]);
+  const [excludedGames, setExcludedGames] = useState<string[]>([]);
 
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,14 +27,31 @@ export default function App() {
       .filter((genre) => genre.selected)
       .map((genre) => genre.label);
 
-      const selectedGenres = [
-    ...selectedPredefinedGenres,
-    ...customGenres,
-  ];
+    const selectedGenres = [
+      ...selectedPredefinedGenres,
+      ...customGenres,
+    ];
+
+    const selectedPredefinedMoods = moods
+      .filter((mood) => mood.selected)
+      .map((mood) => mood.label);
+
+    const selectedMoods = [
+      ...selectedPredefinedMoods,
+      ...customMoods,
+    ];
 
     try {
       setIsLoading(true);
-      const request: RecommendationRequest = {genres: selectedGenres, players: playerAmount, budget: budgetAmount, wildcardAmount};
+      const request: RecommendationRequest = {
+        genres: selectedGenres, 
+        players: playerAmount, 
+        budget: budgetAmount, 
+        wildcardAmount,
+        moods: selectedMoods,
+        excludedGames
+      };
+      console.log(request)
       const response = await getRecommendations(request);
       setRecommendations(response);
       setIsModalOpen(true);
@@ -60,6 +81,12 @@ export default function App() {
               setBudgetAmount={setBudgetAmount}
               wildcardAmount={wildcardAmount}
               setWildcardAmount={setWildcardAmount}
+              moods={moods}
+              setMoods={setMoods}
+              customMoods={customMoods}
+              setCustomMoods={setCustomMoods}
+              excludeGames={excludedGames}
+              setExcludeGames={setExcludedGames}
             />
             </div>
           </div>

@@ -1,5 +1,7 @@
 import SliderCard from './SliderCard';
 import GenreTags from './GenreTags';
+import MoodTags from './MoodTags';
+import ExcludeGamesInput from './ExcludeGamesInput';
 import type { FiltersComponentProps } from '../types/componentPropTypes';
 
 export default function FiltersPanel(props: FiltersComponentProps) {
@@ -33,6 +35,7 @@ export default function FiltersPanel(props: FiltersComponentProps) {
           markers={['Free', 'Indie', 'No Budget']}
           onChange={props.setBudgetAmount}
         />
+
         <SliderCard
           icon="auto_awesome"
           title="Wildcard"
@@ -45,11 +48,23 @@ export default function FiltersPanel(props: FiltersComponentProps) {
         />
       </section>
 
-      <GenreTags 
-        genres={props.genres} 
+      <GenreTags
+        genres={props.genres}
         setGenres={props.setGenres}
         customGenres={props.customGenres}
         setCustomGenres={props.setCustomGenres}
+      />
+
+      <MoodTags
+        moods={props.moods}
+        setMoods={props.setMoods}
+        customMoods={props.customMoods}
+        setCustomMoods={props.setCustomMoods}
+      />
+
+      <ExcludeGamesInput
+        excludedGames={props.excludeGames}
+        setExcludedGames={props.setExcludeGames}
       />
     </div>
   );
