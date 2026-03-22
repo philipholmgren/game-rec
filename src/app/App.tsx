@@ -12,6 +12,7 @@ export default function App() {
   const [customGenres, setCustomGenres] = useState<string[]>([]);
   const [playerAmount, setPlayerAmount] = useState(2);
   const [budgetAmount, setBudgetAmount] = useState(20);
+  const [wildcardAmount, setWildcardAmount] = useState(25);
 
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function App() {
 
     try {
       setIsLoading(true);
-      const request: RecommendationRequest = {genres: selectedGenres, players: playerAmount, budget: budgetAmount};
+      const request: RecommendationRequest = {genres: selectedGenres, players: playerAmount, budget: budgetAmount, wildcardAmount};
       const response = await getRecommendations(request);
       setRecommendations(response);
       setIsModalOpen(true);
@@ -57,6 +58,8 @@ export default function App() {
               setPlayerAmount={setPlayerAmount}
               budgetAmount={budgetAmount}
               setBudgetAmount={setBudgetAmount}
+              wildcardAmount={wildcardAmount}
+              setWildcardAmount={setWildcardAmount}
             />
             </div>
           </div>

@@ -9,6 +9,8 @@ export type FiltersComponentProps = {
   setPlayerAmount: React.Dispatch<React.SetStateAction<number>>;
   budgetAmount: number
   setBudgetAmount: React.Dispatch<React.SetStateAction<number>>;
+  wildcardAmount: number;
+  setWildcardAmount: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export type GenreComponentProps = {

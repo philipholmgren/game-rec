@@ -5,7 +5,7 @@ import type { FiltersComponentProps } from '../types/componentPropTypes';
 export default function FiltersPanel(props: FiltersComponentProps) {
   return (
     <div className="lg:col-span-8 space-y-8">
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <SliderCard
           icon="groups"
           title="Players"
@@ -32,6 +32,16 @@ export default function FiltersPanel(props: FiltersComponentProps) {
           value={props.budgetAmount}
           markers={['Free', 'Indie', 'No Budget']}
           onChange={props.setBudgetAmount}
+        />
+        <SliderCard
+          icon="auto_awesome"
+          title="Wildcard"
+          valueLabel={`${props.wildcardAmount}%`}
+          min={0}
+          max={100}
+          value={props.wildcardAmount}
+          markers={['Focused', 'Balanced', 'Wild']}
+          onChange={props.setWildcardAmount}
         />
       </section>
 

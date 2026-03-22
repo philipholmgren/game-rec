@@ -15,4 +15,5 @@ export type RecommendationRequest = {
   genres: string[];
   players: number;
   budget: number;
+  wildcardAmount: number
 };
