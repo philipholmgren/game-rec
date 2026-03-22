@@ -1,4 +1,4 @@
-import type { Genre, Mood } from "./commonTypes";
+import type { Genre, Mood, Recommendation } from "./commonTypes";
 
 export type FiltersComponentProps = {
   genres: Genre[];
@@ -56,4 +56,12 @@ export type CustomMoodsModalProps = {
   onClose: () => void;
   customMoods: string[];
   setCustomMoods: React.Dispatch<React.SetStateAction<string[]>>;
+};
+
+export type RecommendationsModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  recommendations: Recommendation[];
+  onGenerateMore: () => void;
+  isLoading: boolean;
 };

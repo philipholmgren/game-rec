@@ -4,9 +4,11 @@ import GenerateRecommendations from '../components/GenerateRecommendations';
 import RecommendationsModal from '../components/RecommendationsModal';
 import { useState } from 'react';
 import { allGenres } from '../data/genres';
-import type { Recommendation, RecommendationRequest } from '../types/commonTypes';
+import type { Recommendation } from '../types/commonTypes';
 import { getRecommendations } from '../http/getRecommendations';
 import { allMoods } from '../data/moods';
+import { getRandomInt, getRandomSelectedItems } from '../services/randomizer';
+import { buildRecommendationRequest } from '../services/request';
 
 export default function App() {
   const [genres, setGenres] = useState(allGenres);
@@ -23,34 +25,20 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateRecommendations = async () => {
-    const selectedPredefinedGenres = genres
-      .filter((genre) => genre.selected)
-      .map((genre) => genre.label);
-
-    const selectedGenres = [
-      ...selectedPredefinedGenres,
-      ...customGenres,
-    ];
-
-    const selectedPredefinedMoods = moods
-      .filter((mood) => mood.selected)
-      .map((mood) => mood.label);
-
-    const selectedMoods = [
-      ...selectedPredefinedMoods,
-      ...customMoods,
-    ];
+    const request = buildRecommendationRequest(
+      genres,
+      customGenres,
+      moods,
+      customMoods,
+      excludedGames,
+      undefined,
+      playerAmount,
+      budgetAmount,
+      wildcardAmount
+    );
 
     try {
       setIsLoading(true);
-      const request: RecommendationRequest = {
-        genres: selectedGenres, 
-        players: playerAmount, 
-        budget: budgetAmount, 
-        wildcardAmount,
-        moods: selectedMoods,
-        excludedGames
-      };
       const response = await getRecommendations(request);
       console.log(response)
       setRecommendations(response);
@@ -62,14 +50,64 @@ export default function App() {
     }
   };
 
+  const handleRandomizeFilters = () => {
+    setGenres(getRandomSelectedItems(allGenres, 1, 4));
+    setCustomGenres([]);
+
+    setMoods(getRandomSelectedItems(allMoods, 1, 3));
+    setCustomMoods([]);
+
+    setExcludedGames([]);
+
+    setPlayerAmount(getRandomInt(1, 6));
+    setBudgetAmount(getRandomInt(0, 100));
+    setWildcardAmount(getRandomInt(0, 100));
+  };
+
+  const handleGenerateMoreRecommendations = async () => {
+    try {
+      setIsLoading(true);
+
+      const alreadyRecommendedGames = recommendations.map(
+        (recommendation) => recommendation.name
+      );
+
+      const request = buildRecommendationRequest(
+        genres,
+      customGenres,
+      moods,
+      customMoods,
+      excludedGames,
+      alreadyRecommendedGames,
+      playerAmount,
+      budgetAmount,
+      wildcardAmount
+      );
+
+      const response = await getRecommendations(request);
+      setRecommendations(response);
+    } catch (error) {
+      console.error('Failed to generate more recommendations:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-on-background font-body selection:bg-primary-container selection:text-on-primary-container">
       <main className="pt-32 pb-24 min-h-screen kinetic-bloom px-6 max-w-5xl mx-auto">
         <Title />
-
         <div className="space-y-8">
           <div className="grid grid-cols-1 gap-8 items-start justify-items-center">
             <div className="w-full max-w-4xl">
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={handleRandomizeFilters}
+                  className="px-6 py-3 rounded-lg border border-secondary/30 text-secondary hover:bg-secondary/10 transition-all font-medium"
+                >
+                  Randomize Filters
+                </button>
+              </div>
             <FiltersPanel
               genres={genres}
               setGenres={setGenres}
@@ -92,11 +130,11 @@ export default function App() {
           </div>
 
           <div className="flex justify-center">
-  <GenerateRecommendations
-    onGenerate={handleGenerateRecommendations}
-    isLoading={isLoading}
-  />
-</div>
+            <GenerateRecommendations
+              onGenerate={handleGenerateRecommendations}
+              isLoading={isLoading}
+            />
+          </div>
         </div>
       </main>
 
@@ -104,6 +142,8 @@ export default function App() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         recommendations={recommendations}
+        onGenerateMore={handleGenerateMoreRecommendations}
+        isLoading={isLoading}
       />
     </div>
   );
