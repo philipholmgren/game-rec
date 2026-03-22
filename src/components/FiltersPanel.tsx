@@ -35,7 +35,12 @@ export default function FiltersPanel(props: FiltersComponentProps) {
         />
       </section>
 
-      <GenreTags genres={props.genres} setGenres={props.setGenres} />
+      <GenreTags 
+        genres={props.genres} 
+        setGenres={props.setGenres}
+        customGenres={props.customGenres}
+        setCustomGenres={props.setCustomGenres}
+      />
     </div>
   );
 }

@@ -3,6 +3,8 @@ import type { Genre } from "./commonTypes";
 export type FiltersComponentProps = {
   genres: Genre[];
   setGenres: React.Dispatch<React.SetStateAction<Genre[]>>;
+  customGenres: string[];
+  setCustomGenres: React.Dispatch<React.SetStateAction<string[]>>;
   playerAmount: number
   setPlayerAmount: React.Dispatch<React.SetStateAction<number>>;
   budgetAmount: number
@@ -12,6 +14,8 @@ export type FiltersComponentProps = {
 export type GenreComponentProps = {
   genres: Genre[];
   setGenres: React.Dispatch<React.SetStateAction<Genre[]>>;
+  customGenres: string[];
+  setCustomGenres: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export type GenerateRecommendationsProps = {
@@ -19,3 +23,10 @@ export type GenerateRecommendationsProps = {
     playerAmount: number
     budgetAmount: number
 }
+
+export type CustomGenresModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  customGenres: string[];
+  setCustomGenres: React.Dispatch<React.SetStateAction<string[]>>;
+};

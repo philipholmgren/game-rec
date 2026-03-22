@@ -9,6 +9,7 @@ import { getRecommendations } from '../http/getRecommendations';
 
 export default function App() {
   const [genres, setGenres] = useState(allGenres);
+  const [customGenres, setCustomGenres] = useState<string[]>([]);
   const [playerAmount, setPlayerAmount] = useState(2);
   const [budgetAmount, setBudgetAmount] = useState(20);
 
@@ -17,9 +18,14 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateRecommendations = async () => {
-    const selectedGenres = genres
+    const selectedPredefinedGenres = genres
       .filter((genre) => genre.selected)
       .map((genre) => genre.label);
+
+      const selectedGenres = [
+    ...selectedPredefinedGenres,
+    ...customGenres,
+  ];
 
     try {
       setIsLoading(true);
@@ -45,6 +51,8 @@ export default function App() {
             <FiltersPanel
               genres={genres}
               setGenres={setGenres}
+              customGenres={customGenres}
+              setCustomGenres={setCustomGenres}
               playerAmount={playerAmount}
               setPlayerAmount={setPlayerAmount}
               budgetAmount={budgetAmount}
