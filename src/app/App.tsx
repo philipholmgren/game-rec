@@ -19,10 +19,37 @@ export default function App() {
   const [moods, setMoods] = useState(allMoods);
   const [customMoods, setCustomMoods] = useState<string[]>([]);
   const [excludedGames, setExcludedGames] = useState<string[]>([]);
-
+  const [recommendationMode, setRecommendationMode] = useState<'pc' | 'browser'>('pc');
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleGenerateBrowserGames = async () => {
+    const request = buildRecommendationRequest(
+      genres,
+      customGenres,
+      moods,
+      customMoods,
+      excludedGames,
+      undefined,
+      playerAmount,
+      budgetAmount,
+      wildcardAmount,
+      'browser'
+    );
+
+    try {
+      setIsLoading(true);
+      setRecommendationMode('browser');
+      const response = await getRecommendations(request);
+      setRecommendations(response);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('Failed to generate browser game recommendations:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleGenerateRecommendations = async () => {
     const request = buildRecommendationRequest(
@@ -34,13 +61,14 @@ export default function App() {
       undefined,
       playerAmount,
       budgetAmount,
-      wildcardAmount
+      wildcardAmount,
+      'pc'
     );
 
     try {
       setIsLoading(true);
+      setRecommendationMode('pc');
       const response = await getRecommendations(request);
-      console.log(response)
       setRecommendations(response);
       setIsModalOpen(true);
     } catch (error) {
@@ -67,6 +95,7 @@ export default function App() {
   const handleGenerateMoreRecommendations = async () => {
     try {
       setIsLoading(true);
+      setRecommendationMode('pc');
 
       const alreadyRecommendedGames = recommendations.map(
         (recommendation) => recommendation.name
@@ -81,7 +110,8 @@ export default function App() {
       alreadyRecommendedGames,
       playerAmount,
       budgetAmount,
-      wildcardAmount
+      wildcardAmount,
+      recommendationMode
       );
 
       const response = await getRecommendations(request);
@@ -129,11 +159,21 @@ export default function App() {
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <GenerateRecommendations
-              onGenerate={handleGenerateRecommendations}
-              isLoading={isLoading}
-            />
+          <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4 w-full max-w-3xl">
+              <GenerateRecommendations
+                onGenerate={handleGenerateRecommendations}
+                isLoading={isLoading}
+                label="Generate PC Recommendations"
+              />
+
+              <GenerateRecommendations
+                onGenerate={handleGenerateBrowserGames}
+                isLoading={isLoading}
+                label="Generate Browser Games"
+                variant="secondary"
+              />
+            </div>
           </div>
         </div>
       </main>
@@ -144,6 +184,7 @@ export default function App() {
         recommendations={recommendations}
         onGenerateMore={handleGenerateMoreRecommendations}
         isLoading={isLoading}
+        mode={recommendationMode}
       />
     </div>
   );

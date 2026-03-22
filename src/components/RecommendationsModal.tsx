@@ -5,7 +5,8 @@ export default function RecommendationsModal({
   onClose,
   recommendations,
   onGenerateMore,
-  isLoading
+  isLoading,
+  mode
 }: RecommendationsModalProps) {
   if (!isOpen) return null;
 
@@ -86,7 +87,7 @@ export default function RecommendationsModal({
                       rel="noreferrer"
                       className="inline-flex mt-4 px-4 py-2 rounded-lg bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 transition-colors"
                     >
-                      View on Steam
+                      {mode === 'pc' ? 'View on Steam' : 'Go to site'}
                     </a>
                   </div>
                 </div>

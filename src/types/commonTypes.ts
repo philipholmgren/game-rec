@@ -28,4 +28,5 @@ export type RecommendationRequest = {
   wildcardAmount: number
   moods: string[]
   excludedGames: string[]
+  mode: 'pc' | 'browser';
 };

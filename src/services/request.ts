@@ -9,7 +9,8 @@ export const buildRecommendationRequest = (
     extraExcludedGames: string[] = [],
     playerAmount: number,
     budgetAmount: number,
-    wildcardAmount: number
+    wildcardAmount: number,
+    mode: 'pc' | 'browser'
 ): RecommendationRequest => {
   const selectedPredefinedGenres = genres
     .filter((genre) => genre.selected)
@@ -38,5 +39,6 @@ export const buildRecommendationRequest = (
     players: playerAmount,
     budget: budgetAmount,
     wildcardAmount: wildcardAmount,
+    mode
   };
 };

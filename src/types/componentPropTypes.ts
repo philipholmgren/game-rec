@@ -64,4 +64,5 @@ export type RecommendationsModalProps = {
   recommendations: Recommendation[];
   onGenerateMore: () => void;
   isLoading: boolean;
+  mode: 'pc' | 'browser'
 };
