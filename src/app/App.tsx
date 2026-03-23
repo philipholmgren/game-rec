@@ -19,6 +19,7 @@ export default function App() {
   const [moods, setMoods] = useState(allMoods);
   const [customMoods, setCustomMoods] = useState<string[]>([]);
   const [excludedGames, setExcludedGames] = useState<string[]>([]);
+  const [allRecommendedGameNames, setAllRecommendedGameNames] = useState<string[]>([]);
   const [recommendationMode, setRecommendationMode] = useState<'pc' | 'browser'>('pc');
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,8 +42,12 @@ export default function App() {
     try {
       setIsLoading(true);
       setRecommendationMode('browser');
+
       const response = await getRecommendations(request);
       setRecommendations(response);
+
+      setAllRecommendedGameNames(response.map((recommendation: Recommendation) => recommendation.name));
+
       setIsModalOpen(true);
     } catch (error) {
       console.error('Failed to generate browser game recommendations:', error);
@@ -68,8 +73,12 @@ export default function App() {
     try {
       setIsLoading(true);
       setRecommendationMode('pc');
+
       const response = await getRecommendations(request);
       setRecommendations(response);
+
+      setAllRecommendedGameNames(response.map((recommendation: Recommendation) => recommendation.name));
+
       setIsModalOpen(true);
     } catch (error) {
       console.error('Failed to generate recommendations:', error);
@@ -95,27 +104,27 @@ export default function App() {
   const handleGenerateMoreRecommendations = async () => {
     try {
       setIsLoading(true);
-      setRecommendationMode('pc');
-
-      const alreadyRecommendedGames = recommendations.map(
-        (recommendation) => recommendation.name
-      );
 
       const request = buildRecommendationRequest(
         genres,
-      customGenres,
-      moods,
-      customMoods,
-      excludedGames,
-      alreadyRecommendedGames,
-      playerAmount,
-      budgetAmount,
-      wildcardAmount,
-      recommendationMode
+        customGenres,
+        moods,
+        customMoods,
+        excludedGames,
+        allRecommendedGameNames,
+        playerAmount,
+        budgetAmount,
+        wildcardAmount,
+        recommendationMode
       );
 
       const response = await getRecommendations(request);
       setRecommendations(response);
+
+      setAllRecommendedGameNames((prev) => [
+        ...prev,
+        ...response.map((recommendation: Recommendation) => recommendation.name),
+      ]);
     } catch (error) {
       console.error('Failed to generate more recommendations:', error);
     } finally {
