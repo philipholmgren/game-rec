@@ -1,7 +1,7 @@
 import type { RecommendationRequest } from "../types/commonTypes";
 
 export async function getRecommendations(payload: RecommendationRequest) {
-  const response = await fetch("https://api.nextgame.se/recommendations", {
+  const response = await fetch("nextgame.philip-holmgren.workers.dev", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
