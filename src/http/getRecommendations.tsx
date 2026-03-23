@@ -2,7 +2,7 @@ import type { RecommendationRequest } from "../types/commonTypes";
 
 export async function getRecommendations(payload: RecommendationRequest) {
   const response = await fetch("/api/recommendations", {
-    method: "POST",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
