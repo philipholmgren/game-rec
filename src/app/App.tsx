@@ -15,7 +15,7 @@ export default function App() {
   const [customGenres, setCustomGenres] = useState<string[]>([]);
   const [playerAmount, setPlayerAmount] = useState(2);
   const [budgetAmount, setBudgetAmount] = useState(20);
-  const [wildcardAmount, setWildcardAmount] = useState(25);
+  const [wildcardAmount, setWildcardAmount] = useState(0);
   const [moods, setMoods] = useState(allMoods);
   const [customMoods, setCustomMoods] = useState<string[]>([]);
   const [excludedGames, setExcludedGames] = useState<string[]>([]);
@@ -26,10 +26,12 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateBrowserGames = async () => {
+    const filteredGenres = genres.filter((genre) => genre.label !== 'Any')
+    const filteredMoods = moods.filter((mood) => mood.label !== 'Any')
     const request = buildRecommendationRequest(
-      genres,
+      filteredGenres,
       customGenres,
-      moods,
+      filteredMoods,
       customMoods,
       excludedGames,
       undefined,
@@ -57,10 +59,12 @@ export default function App() {
   };
 
   const handleGenerateRecommendations = async () => {
+    const filteredGenres = genres.filter((genre) => genre.label !== 'Any')
+    const filteredMoods = moods.filter((mood) => mood.label !== 'Any')
     const request = buildRecommendationRequest(
-      genres,
+      filteredGenres,
       customGenres,
-      moods,
+      filteredMoods,
       customMoods,
       excludedGames,
       undefined,
@@ -88,10 +92,10 @@ export default function App() {
   };
 
   const handleRandomizeFilters = () => {
-    setGenres(getRandomSelectedItems(allGenres, 1, 4));
+    setGenres(getRandomSelectedItems(allGenres.filter((genre) => genre.label !== 'Any'), 1, 4));
     setCustomGenres([]);
 
-    setMoods(getRandomSelectedItems(allMoods, 1, 3));
+    setMoods(getRandomSelectedItems(allMoods.filter((mood) => mood.label !== 'Any'), 1, 3));
     setCustomMoods([]);
 
     setExcludedGames([]);
@@ -99,6 +103,20 @@ export default function App() {
     setPlayerAmount(getRandomInt(1, 6));
     setBudgetAmount(getRandomInt(0, 100));
     setWildcardAmount(getRandomInt(0, 100));
+  };
+
+  const handleResetFilters = () => {
+    setGenres(allGenres);
+    setCustomGenres([]);
+
+    setMoods(allMoods);
+    setCustomMoods([]);
+
+    setExcludedGames([]);
+
+    setPlayerAmount(2);
+    setBudgetAmount(20);
+    setWildcardAmount(0);
   };
 
   const handleGenerateMoreRecommendations = async () => {
@@ -139,12 +157,18 @@ export default function App() {
         <div className="space-y-8">
           <div className="grid grid-cols-1 gap-8 items-start justify-items-center">
             <div className="w-full max-w-4xl">
-              <div className="flex justify-end mb-4">
+              <div className="flex justify-end mb-4 gap-2">
                 <button
                   onClick={handleRandomizeFilters}
                   className="px-6 py-3 rounded-lg border border-secondary/30 text-secondary hover:bg-secondary/10 transition-all font-medium"
                 >
                   Randomize Filters
+                </button>
+                <button
+                  onClick={handleResetFilters}
+                  className="px-6 py-3 rounded-lg border border-secondary/30 text-secondary hover:bg-secondary/10 transition-all font-medium"
+                >
+                  Reset Filters
                 </button>
               </div>
             <FiltersPanel

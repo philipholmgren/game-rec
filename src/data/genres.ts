@@ -1,6 +1,7 @@
 import type { Genre } from "../types/commonTypes";
 
 export const allGenres: Genre[] = [
+  { label: 'Any', selected: true },
   { label: 'RPG', selected: false },
   { label: 'FPS', selected: false},
   { label: 'Indie', selected: false },

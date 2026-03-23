@@ -1,4 +1,5 @@
 export const allMoods = [
+  { label: 'Any', selected: true },
   { label: 'Relaxing', selected: false },
   { label: 'Competitive', selected: false },
   { label: 'Story-driven', selected: false },

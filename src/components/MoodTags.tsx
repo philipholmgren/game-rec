@@ -4,13 +4,41 @@ import CustomGenresModal from './CustomGenresModal';
 
 export default function MoodTags(props: MoodComponentProps) {
 const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
-  const toggleMood = (label: string) => {
-    props.setMoods((moods) =>
-      moods.map((mood) =>
-        mood.label === label ? { ...mood, selected: !mood.selected } : mood
-      )
+const toggleMood = (label: string) => {
+  props.setMoods((moods) => {
+    if (label === 'Any') {
+      return moods.map((mood) => ({
+        ...mood,
+        selected: mood.label === 'Any',
+      }));
+    }
+
+    const updatedMoods = moods.map((mood) => {
+      if (mood.label === 'Any') {
+        return { ...mood, selected: false };
+      }
+
+      if (mood.label === label) {
+        return { ...mood, selected: !mood.selected };
+      }
+
+      return mood;
+    });
+
+    const hasSelectedSpecificMood = updatedMoods.some(
+      (mood) => mood.label !== 'Any' && mood.selected
     );
-  };
+
+    if (!hasSelectedSpecificMood) {
+      return updatedMoods.map((mood) => ({
+        ...mood,
+        selected: mood.label === 'Any',
+      }));
+    }
+
+    return updatedMoods;
+  });
+};
 
   return (
     <>

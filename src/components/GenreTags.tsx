@@ -6,11 +6,39 @@ export default function GenreTags(props: GenreComponentProps) {
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
 
   const toggleGenre = (label: string) => {
-    props.setGenres((genres) =>
-      genres.map((genre) =>
-        genre.label === label ? { ...genre, selected: !genre.selected } : genre
-      )
-    );
+    props.setGenres((genres) => {
+      if (label === 'Any') {
+        return genres.map((genre) => ({
+          ...genre,
+          selected: genre.label === 'Any',
+        }));
+      }
+
+      const updatedGenres = genres.map((genre) => {
+        if (genre.label === 'Any') {
+          return { ...genre, selected: false };
+        }
+
+        if (genre.label === label) {
+          return { ...genre, selected: !genre.selected };
+        }
+
+        return genre;
+      });
+
+      const hasSelectedSpecificGenre = updatedGenres.some(
+        (genre) => genre.label !== 'Any' && genre.selected
+      );
+
+      if (!hasSelectedSpecificGenre) {
+        return updatedGenres.map((genre) => ({
+          ...genre,
+          selected: genre.label === 'Any',
+        }));
+      }
+
+      return updatedGenres;
+    });
   };
 
   return (
