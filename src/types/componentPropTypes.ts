@@ -44,11 +44,13 @@ export type GenerateRecommendationsProps = {
     budgetAmount: number
 }
 
-export type CustomGenresModalProps = {
+export type CustomFilterModalProps = {
   isOpen: boolean;
   onClose: () => void;
   customGenres: string[];
   setCustomGenres: React.Dispatch<React.SetStateAction<string[]>>;
+  onCustomAdd?: () => void;
+  onCustomRemove?: (remainingItems: string[]) => void;
 };
 
 export type CustomMoodsModalProps = {

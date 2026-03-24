@@ -1,13 +1,33 @@
 import { useState } from 'react';
 import type { GenreComponentProps } from '../types/componentPropTypes';
-import CustomGenresModal from './CustomGenresModal';
+import CustomFilterModal from './CustomFilterModal';
 
 export default function GenreTags(props: GenreComponentProps) {
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
 
+  const selectAnyGenre = () => {
+    props.setGenres((genres) =>
+      genres.map((genre) => ({
+        ...genre,
+        selected: genre.label === 'Any',
+      }))
+    );
+  };
+
+  const deselectAnyGenre = () => {
+    props.setGenres((genres) =>
+      genres.map((genre) => ({
+        ...genre,
+        selected: genre.label === 'Any' ? false : genre.selected,
+      }))
+    );
+  };
+
   const toggleGenre = (label: string) => {
     props.setGenres((genres) => {
       if (label === 'Any') {
+        props.setCustomGenres([]);
+
         return genres.map((genre) => ({
           ...genre,
           selected: genre.label === 'Any',
@@ -30,7 +50,7 @@ export default function GenreTags(props: GenreComponentProps) {
         (genre) => genre.label !== 'Any' && genre.selected
       );
 
-      if (!hasSelectedSpecificGenre) {
+      if (!hasSelectedSpecificGenre && props.customGenres.length === 0) {
         return updatedGenres.map((genre) => ({
           ...genre,
           selected: genre.label === 'Any',
@@ -39,6 +59,22 @@ export default function GenreTags(props: GenreComponentProps) {
 
       return updatedGenres;
     });
+  };
+
+  const handleRemoveCustomGenre = (genreToRemove: string) => {
+    const remainingGenres = props.customGenres.filter(
+      (customGenre) => customGenre !== genreToRemove
+    );
+
+    props.setCustomGenres(remainingGenres);
+
+    const hasSelectedPredefinedGenre = props.genres.some(
+      (genre) => genre.label !== 'Any' && genre.selected
+    );
+
+    if (!hasSelectedPredefinedGenre && remainingGenres.length === 0) {
+      selectAnyGenre();
+    }
   };
 
   return (
@@ -83,11 +119,7 @@ export default function GenreTags(props: GenreComponentProps) {
                 >
                   <span>{genre}</span>
                   <button
-                    onClick={() =>
-                      props.setCustomGenres((prev) =>
-                        prev.filter((customGenre) => customGenre !== genre)
-                      )
-                    }
+                    onClick={() => handleRemoveCustomGenre(genre)}
                     className="flex items-center justify-center rounded-full hover:bg-white/10 transition-colors"
                     aria-label={`Remove ${genre}`}
                   >
@@ -100,11 +132,21 @@ export default function GenreTags(props: GenreComponentProps) {
         )}
       </section>
 
-      <CustomGenresModal
+      <CustomFilterModal
         isOpen={isCustomModalOpen}
         onClose={() => setIsCustomModalOpen(false)}
         customGenres={props.customGenres}
         setCustomGenres={props.setCustomGenres}
+        onCustomAdd={deselectAnyGenre}
+        onCustomRemove={(remainingGenres) => {
+          const hasSelectedPredefinedGenre = props.genres.some(
+            (genre) => genre.label !== 'Any' && genre.selected
+          );
+
+          if (!hasSelectedPredefinedGenre && remainingGenres.length === 0) {
+            selectAnyGenre();
+          }
+        }}
       />
     </>
   );

@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { validateCustomInput } from "../services/inputValidator";
-import type { CustomGenresModalProps } from '../types/componentPropTypes';
+import type { CustomFilterModalProps } from '../types/componentPropTypes';
 
 export default function CustomGenresModal({
   isOpen,
   onClose,
   customGenres,
   setCustomGenres,
-}: CustomGenresModalProps) {
+  onCustomAdd,
+  onCustomRemove,
+}: CustomFilterModalProps) {
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -35,13 +37,16 @@ export default function CustomGenresModal({
     }
 
     setCustomGenres((prev) => [...prev, trimmed]);
+    onCustomAdd?.();
 
     setInputValue('');
     setError(null);
   };
 
   const handleRemoveGenre = (genreToRemove: string) => {
-    setCustomGenres((prev) => prev.filter((genre) => genre !== genreToRemove));
+    const remainingItems = customGenres.filter((genre) => genre !== genreToRemove);
+    setCustomGenres(remainingItems);
+    onCustomRemove?.(remainingItems);
   };
 
   return (
@@ -75,7 +80,7 @@ export default function CustomGenresModal({
               value={inputValue}
               onChange={(e) => {
                 setInputValue(e.target.value);
-                setError(null); 
+                setError(null);
               }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleAddGenre();
