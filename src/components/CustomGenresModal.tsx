@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { validateCustomInput } from "../services/inputValidator";
 import type { CustomGenresModalProps } from '../types/componentPropTypes';
 
 export default function CustomGenresModal({
@@ -8,20 +9,35 @@ export default function CustomGenresModal({
   setCustomGenres,
 }: CustomGenresModalProps) {
   const [inputValue, setInputValue] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const handleAddGenre = () => {
     const trimmed = inputValue.trim();
 
-    if (!trimmed) return;
+    if (!trimmed) {
+      setError("Input cannot be empty");
+      return;
+    }
+
     if (customGenres.includes(trimmed)) {
+      setError("Already added");
       setInputValue('');
       return;
     }
 
+    const validateResult = validateCustomInput(trimmed);
+
+    if (!validateResult.valid) {
+      setError(validateResult.error || "Invalid input");
+      return;
+    }
+
     setCustomGenres((prev) => [...prev, trimmed]);
+
     setInputValue('');
+    setError(null);
   };
 
   const handleRemoveGenre = (genreToRemove: string) => {
@@ -57,7 +73,10 @@ export default function CustomGenresModal({
             <input
               type="text"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                setError(null); 
+              }}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleAddGenre();
               }}
@@ -71,6 +90,10 @@ export default function CustomGenresModal({
               Add
             </button>
           </div>
+
+          {error && (
+            <p className="text-red-500 text-sm">{error}</p>
+          )}
 
           <div className="flex flex-wrap gap-3">
             {customGenres.length === 0 ? (
