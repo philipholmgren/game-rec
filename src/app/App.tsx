@@ -26,8 +26,9 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGenerateBrowserGames = async () => {
-    const filteredGenres = genres.filter((genre) => genre.label !== 'Any')
-    const filteredMoods = moods.filter((mood) => mood.label !== 'Any')
+    const filteredGenres = genres.filter((genre) => genre.label !== 'Any');
+    const filteredMoods = moods.filter((mood) => mood.label !== 'Any');
+
     const request = buildRecommendationRequest(
       filteredGenres,
       customGenres,
@@ -42,15 +43,17 @@ export default function App() {
     );
 
     try {
-      setIsLoading(true);
       setRecommendationMode('browser');
+      setRecommendations([]);
+      setIsModalOpen(true);
+      setIsLoading(true);
 
       const response = await getRecommendations(request);
       setRecommendations(response);
 
-      setAllRecommendedGameNames(response.map((recommendation: Recommendation) => recommendation.name));
-
-      setIsModalOpen(true);
+      setAllRecommendedGameNames(
+        response.map((r: Recommendation) => r.name)
+      );
     } catch (error) {
       console.error('Failed to generate browser game recommendations:', error);
     } finally {
@@ -59,8 +62,9 @@ export default function App() {
   };
 
   const handleGenerateRecommendations = async () => {
-    const filteredGenres = genres.filter((genre) => genre.label !== 'Any')
-    const filteredMoods = moods.filter((mood) => mood.label !== 'Any')
+    const filteredGenres = genres.filter((genre) => genre.label !== 'Any');
+    const filteredMoods = moods.filter((mood) => mood.label !== 'Any');
+
     const request = buildRecommendationRequest(
       filteredGenres,
       customGenres,
@@ -75,15 +79,17 @@ export default function App() {
     );
 
     try {
-      setIsLoading(true);
       setRecommendationMode('pc');
+      setRecommendations([]);
+      setIsModalOpen(true);
+      setIsLoading(true);
 
       const response = await getRecommendations(request);
       setRecommendations(response);
 
-      setAllRecommendedGameNames(response.map((recommendation: Recommendation) => recommendation.name));
-
-      setIsModalOpen(true);
+      setAllRecommendedGameNames(
+        response.map((r: Recommendation) => r.name)
+      );
     } catch (error) {
       console.error('Failed to generate recommendations:', error);
     } finally {
@@ -123,26 +129,36 @@ export default function App() {
     try {
       setIsLoading(true);
 
+      const newExcluded = [
+        ...excludedGames,
+        ...recommendations.map((r) => r.name),
+      ];
+
+      setExcludedGames(newExcluded);
+
       const request = buildRecommendationRequest(
         genres,
         customGenres,
         moods,
         customMoods,
-        excludedGames,
-        allRecommendedGameNames,
+        newExcluded, 
+        undefined, 
         playerAmount,
         budgetAmount,
         wildcardAmount,
         recommendationMode
       );
 
+      setRecommendations([]);
+
       const response = await getRecommendations(request);
+
       setRecommendations(response);
 
-      setAllRecommendedGameNames((prev) => [
-        ...prev,
-        ...response.map((recommendation: Recommendation) => recommendation.name),
-      ]);
+      setAllRecommendedGameNames(
+        response.map((r: Recommendation) => r.name)
+      );
+
     } catch (error) {
       console.error('Failed to generate more recommendations:', error);
     } finally {
@@ -203,7 +219,7 @@ export default function App() {
               <GenerateRecommendations
                 onGenerate={handleGenerateBrowserGames}
                 isLoading={isLoading}
-                label="Generate Browser Games"
+                label="Generate Browser Recommendations"
                 variant="secondary"
               />
             </div>

@@ -1,4 +1,5 @@
 import type { RecommendationsModalProps } from '../types/componentPropTypes';
+import { useEffect, useState } from "react";
 
 export default function RecommendationsModal({
   isOpen,
@@ -8,6 +9,40 @@ export default function RecommendationsModal({
   isLoading,
   mode
 }: RecommendationsModalProps) {
+  const loadingMessages = [
+    "Finding the best games for you...",
+    "Scanning thousands of possibilities...",
+    "Checking hidden gems...",
+    "Avoiding bad recommendations...",
+    "Matching your mood perfectly...",
+    "Balancing fun and chaos...",
+    "Looking for something you'll love...",
+    "Filtering out the boring stuff...",
+    "Finding games worth your time...",
+    "Tuning recommendations just for you...",
+    "Exploring different genres...",
+    "Making sure it fits your vibe...",
+    "Picking something great...",
+    "Searching beyond the obvious...",
+    "Avoiding repeats and clichés...",
+    "Consulting the gaming gods...",
+    "Rolling the dice on something awesome...",
+    "Finding your next obsession...",
+    "Almost there...",
+  ];
+
+  const [messageIndex, setMessageIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isLoading) return;
+
+    const interval = setInterval(() => {
+      setMessageIndex((prev) => (prev + 1) % loadingMessages.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isLoading]);
+
   if (!isOpen) return null;
 
   return (
@@ -44,7 +79,20 @@ export default function RecommendationsModal({
           </div>
         </div>
         <div className="p-6 max-h-[75vh] overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="p-6">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-20 gap-6">
+                {/* Spinner */}
+                <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin shadow-lg" />
+
+                {/* Loading text */}
+                <p className="text-lg text-on-surface-variant text-center transition-opacity duration-500">
+                  {loadingMessages[messageIndex]}
+                </p>
+              </div>
+            ) : (
+              <>
+                          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {recommendations.map((recommendation) => (
               <div
                 key={recommendation.appid ?? recommendation.link}
@@ -94,6 +142,10 @@ export default function RecommendationsModal({
               </div>
             ))}
           </div>
+              </>
+            )}
+          </div>
+
         </div>
       </div>
     </div>

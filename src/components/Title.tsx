@@ -5,7 +5,7 @@ export default function Title() {
         Next Game <span className="text-secondary-fixed"></span>
       </h1>
       <p className="text-on-surface-variant text-lg max-w-2xl font-light text-center">
-        Find your next favorite game
+        Play around with the filters and click 'Generate PC Recommendations' or 'Generate Browser Recommendations' at the bottom to find your next favorite game
       </p>
     </header>
   );
